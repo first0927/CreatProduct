@@ -1,15 +1,13 @@
-// File: api/create-product.js
-import express from 'express';
 import fetch from 'node-fetch';
-import dotenv from 'dotenv';
-dotenv.config();
-
-const router = express.Router();
 
 const SHOPIFY_API_URL = `https://${process.env.SHOPIFY_STORE}/admin/api/2023-07/products.json`;
 const ADMIN_API_TOKEN = process.env.SHOPIFY_ADMIN_TOKEN;
 
-router.post('/api/create-product', async (req, res) => {
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: '仅支持 POST 方法' });
+  }
+
   try {
     const { title, price, material, color, description } = req.body;
 
@@ -57,6 +55,4 @@ router.post('/api/create-product', async (req, res) => {
   } catch (err) {
     return res.status(500).json({ success: false, error: err.message });
   }
-});
-
-export default router;
+}
