@@ -1,3 +1,4 @@
+// File: api/create-product.js
 import fetch from 'node-fetch';
 
 const SHOPIFY_API_URL = `https://${process.env.SHOPIFY_STORE}/admin/api/2023-07/products.json`;
@@ -5,7 +6,7 @@ const ADMIN_API_TOKEN = process.env.SHOPIFY_ADMIN_TOKEN;
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: '仅支持 POST 方法' });
+    return res.status(405).json({ error: '只支持 POST 请求' });
   }
 
   try {
