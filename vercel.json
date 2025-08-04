@@ -7,6 +7,37 @@
     }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1.js" }
+    { 
+      "src": "/api/(.*)", 
+      "dest": "/api/$1",
+      "methods": ["GET", "POST", "OPTIONS"]
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { 
+          "key": "Access-Control-Allow-Origin", 
+          "value": "https://byiby.myshopify.com" 
+        },
+        { 
+          "key": "Access-Control-Allow-Methods", 
+          "value": "POST, OPTIONS" 
+        },
+        { 
+          "key": "Access-Control-Allow-Headers", 
+          "value": "Content-Type" 
+        },
+        { 
+          "key": "Access-Control-Max-Age", 
+          "value": "86400" 
+        },
+        { 
+          "key": "Vary", 
+          "value": "Origin" 
+        }
+      ]
+    }
   ]
 }
