@@ -1,27 +1,20 @@
 // File: api/create-product.js
-import express from 'express';
 import fetch from 'node-fetch';
-import dotenv from 'dotenv';
-dotenv.config();
 
-const router = express.Router();
+export default async function handler(req, res) {
+  // 设置 CORS 头
+  res.setHeader('Access-Control-Allow-Origin', 'https://byiby.myshopify.com');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-// ✅ 添加 CORS 中间件
-router.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://byiby.myshopify.com'); // 也可以用 '*' 在开发阶段
-  res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') {
-    return res.sendStatus(204); // 预检请求直接返回
+    return res.status(204).end(); // 预检请求快速返回
   }
-  next();
-});
 
-const SHOPIFY_API_URL = `https://${process.env.SHOPIFY_STORE}/admin/api/2023-07/products.json`;
-const ADMIN_API_TOKEN = process.env.SHOPIFY_ADMIN_TOKEN;
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
 
-// ... 你原来的 POST 路由
-router.post('/api/create-product', async (req, res) => {
   try {
     const { title, price, material, color, description } = req.body;
 
@@ -46,6 +39,9 @@ router.post('/api/create-product', async (req, res) => {
       }
     };
 
+    const SHOPIFY_API_URL = `https://${process.env.SHOPIFY_STORE}/admin/api/2023-07/products.json`;
+    const ADMIN_API_TOKEN = process.env.SHOPIFY_ADMIN_TOKEN;
+
     const response = await fetch(SHOPIFY_API_URL, {
       method: 'POST',
       headers: {
@@ -69,6 +65,4 @@ router.post('/api/create-product', async (req, res) => {
   } catch (err) {
     return res.status(500).json({ success: false, error: err.message });
   }
-});
-
-export default router;
+}
